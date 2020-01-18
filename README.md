@@ -171,32 +171,32 @@ To quickly get an Unleash server up and running with Keptn, follow these instruc
 
 Make sure you are in the correct folder of your examples directory:
 
-```
+```console
 cd examples/unleash
 ```
 
 Create a new project
 
-```
+```console
 keptn create project unleash --shipyard=./shipyard.yaml
 ```
 
 Onboard unleash and unleash-db using the keptn onboard service command:
 
-```
+```console
 keptn onboard service unleash-db --project=unleash --chart=./unleash-db
 keptn onboard service unleash --project=unleash --chart=./unleash
 ```
 
 Send new artifacts for unleash and unleash-db using the keptn send new-artifact command:
 
-```
+```console
 keptn send event new-artifact --project=unleash --service=unleash-db --image=postgres:10.4
 keptn send event new-artifact --project=unleash --service=unleash --image=docker.io/keptnexamples/unleash:1.0.0
 ```
 
 Get the url (unleash.unelash-dev.KEPTN_DOMAIN):
-```
+```console
 echo http://unleash.unleash-production.$(kubectl get cm keptn-domain -n keptn -o=jsonpath='{.data.app_domain}')
 ```
 Open the url in your browser and log in using the following credentials:
@@ -212,13 +212,13 @@ password: keptn
 Now everything is set up in the Unleash server. For Keptn to be able to connect to the Unleash server, we have to add a secret with the Unleash API URL as well as the Unleash tokens.
 
 Execute the following command but replace $URL with the actual URL, $USER with the user and $TOKEN with the token of your Unleash server. As you have already onboarded unleash using Keptn, you can use the following command:
-```
+```console
 kubectl -n keptn create secret generic unleash --from-literal="UNLEASH_SERVER_URL=http://unleash.unleash-production/api" --from-literal="UNLEASH_USER=keptn" --from-literal="UNLEASH_TOKEN=keptn"
 ```
 
 Keptn has to be aware of the new secret and have to load it for it to connect to the Unleash server to set the feature toggles. Therefore, the remediation service must be restarted:
 
-```
+```console
 kubectl delete pod -l=run=remediation-service -n keptn
 ```
 
@@ -236,7 +236,7 @@ Finally, switch to the carts example (cd examples/onboarding-carts) and add the 
 ```
 using the command:
 
-```
+```console
 keptn add-resource --project=sockshop --service=carts --stage=production --resource=remediation_feature_toggle.yaml --resourceUri=remediation.yaml
 ```
 Note: The file describes remediation actions (e.g., featuretoggle) in response to problems/alerts (e.g., Response time degradation) that are sent to Keptn.
