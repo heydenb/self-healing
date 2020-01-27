@@ -249,10 +249,6 @@ kubectl delete pod -l=run=remediation-service -n keptn
 Finally, switch to the carts example (cd examples/onboarding-carts) and add the following remediation instructions
 ```yaml
  remediations:
- - name: "Response time degradation"
-   actions:
-   - action: featuretoggle
-     value: EnableItemCache:on
  - name: "Failure rate increase"
    actions:
    - action: featuretoggle
@@ -261,16 +257,35 @@ Finally, switch to the carts example (cd examples/onboarding-carts) and add the 
 using the command:
 
 ```console
-keptn add-resource --project=sockshop --service=carts --stage=production --resource=remediation_feature_toggle.yaml --resourceUri=remediation.yaml
+keptn add-resource --project=sockshop --service=carts --stage=production --resource=remediation.yaml --resourceUri=remediation.yaml
 ```
-Note: The file describes remediation actions (e.g., featuretoggle) in response to problems/alerts (e.g., Response time degradation) that are sent to Keptn.
-
-Now that everything is set up, next we are going to hit the application with some load and toggle the feature flags.
 
 
-# Hands-on Labs 👩‍💻👨‍💻
+Now that everything is set up, next we are going to hit the application with some load and toggle the feature flag.
 
-now that everything is set up do the actual lab with self-healing
+
+# Try the Self-Healing 👩‍💻👨‍💻
+
+1. Move to the folder with some load generation scripts
+
+    ```console
+    cd load-generation/bin
+    ```
+
+1. Start the load generator
+
+    ```console
+    ./loadgenerator-linux "http://carts.sockshop-production.$(kubectl get cm keptn-domain -n keptn -o=jsonpath='{.data.app_domain}')" 
+    ```
+
+1. Now, go back to your Unleash server in your browser. In this tutorial, we are going to turn on the promotional campaign, which purpose is to add promotional gifts to about 30 % of the user interactions that put items in their shopping cart.
+
+1. Click on the toggle next to EnablePromotion to enable this feature flag.
+    ![enable promotion](./images/unleash-promotion-toggle-on.png)
+
+1. By enabling this feature flag, a not implemented function is called resulting in a NotImplementedFunction error in the source code and a failed response. After a couple of minutes, the monitoring tool will detect an increase in the failure rate and will send out a problem notification to Keptn.
+
+6. Keptn will receive the problem notification/alert and look for a remediation action that matches this problem. Since we have added the remediation.yaml before, Keptn will find a remediation action and will trigger the corresponding action that will disable the feature flag.
 
 
 # Keptn Community 📢
