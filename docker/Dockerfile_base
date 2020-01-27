@@ -1,0 +1,64 @@
+FROM ubuntu:18.04
+
+######################################################################
+# Install common tools
+######################################################################
+
+RUN apt-get update -qq && \
+  apt-get install -qqy --no-install-recommends \
+    apt-transport-https \
+    bc \
+    ca-certificates \
+    curl \
+    git \
+    gnupg \
+    jq \
+    wget \
+    vim \
+    nano \
+  && rm -rf /var/lib/apt/lists/*
+
+ARG YQ_VERSION=2.3.0
+RUN wget https://github.com/mikefarah/yq/releases/download/$YQ_VERSION/yq_linux_amd64 && \
+  chmod +x yq_linux_amd64 && \
+  mv yq_linux_amd64 /bin/yq
+
+ARG HELM_VERSION=2.12.3
+RUN wget -q https://storage.googleapis.com/kubernetes-helm/helm-v$HELM_VERSION-linux-amd64.tar.gz && \
+  tar -zxvf helm-v$HELM_VERSION-linux-amd64.tar.gz && \
+  mv linux-amd64/helm /bin/helm && \
+  rm -f helm-v$HELM_VERSION-linux-amd64.tar.gz && \
+  rm -rf linux-amd64
+
+ARG KUBE_VERSION=1.14.1
+RUN wget -q https://storage.googleapis.com/kubernetes-release/release/v$KUBE_VERSION/bin/linux/amd64/kubectl -O /bin/kubectl && \
+  chmod +x /bin/kubectl
+
+# show the installed versions
+
+RUN git --version
+RUN jq --version
+RUN yq --version
+RUN kubectl version --client
+RUN helm version --client
+
+######################################################################
+# Keptn CLI
+######################################################################
+ARG CLI_VERSION=0.6.0
+ARG CLI_DISTO=linux
+RUN curl -L https://github.com/keptn/keptn/releases/download/${CLI_VERSION}/${CLI_VERSION}_keptn-${CLI_DISTO}.tar --output ${CLI_VERSION}_keptn.tar
+RUN tar -C /tmp -xvf ${CLI_VERSION}_keptn.tar
+RUN chmod +x /tmp/keptn
+RUN mv /tmp/keptn /usr/local/bin/keptn
+RUN rm -rf ${CLI_VERSION}_keptn.tar
+RUN keptn version
+
+######################################################################
+# copy files
+######################################################################
+WORKDIR /usr/keptn
+COPY ./examples examples
+#COPY ./keptn-onboarding keptn-onboarding
+#COPY ./load-generation load-generation
+#COPY MANIFEST MANIFEST
