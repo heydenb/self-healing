@@ -138,8 +138,23 @@ We recommend creating a temporary file and copying the following lines into an e
 
 ## 3) Install Dynatrace
 
-UPDATE THIS SECTION TO KEPTN 06
+1. Create a secret for in your cluster with the Dynatrace credentials
 
+    ```console
+    kubectl -n keptn create secret generic dynatrace --from-literal="DT_API_TOKEN=<DT_API_TOKEN>" --from-literal="DT_TENANT=<DT_TENANT>" --from-literal="DT_PAAS_TOKEN=<DT_PAAS_TOKEN>"
+    ```
+
+1. Install the Dyntrace service:
+
+    ```console
+    kubectl apply -f https://raw.githubusercontent.com/keptn-contrib/dynatrace-service/0.6.0/deploy/manifests/dynatrace-service/dynatrace-service.yaml
+    ```
+
+1. Once the Dynatrace service is instaled, configure Dyntrace with Keptn:
+
+    ```console
+    keptn configure monitoring dynatrace
+    ```
 
 ## 4) Expose Keptn's Bridge - OPTIONAL
 
@@ -169,33 +184,33 @@ TODO: check if this still correct script!
 
 To quickly get an Unleash server up and running with Keptn, follow these instructions:
 
-Make sure you are in the correct folder of your examples directory:
+1. Make sure you are in the correct folder of your examples directory:
 
-```console
-cd examples/unleash
-```
+    ```console
+    cd examples/unleash-server
+    ```
 
-Create a new project
+1. Create a new project
 
-```console
-keptn create project unleash --shipyard=./shipyard.yaml
-```
+    ```console
+    keptn create project unleash --shipyard=./shipyard.yaml
+    ```
 
-Onboard unleash and unleash-db using the keptn onboard service command:
+1. Onboard unleash and unleash-db using the keptn onboard service command:
 
-```console
-keptn onboard service unleash-db --project=unleash --chart=./unleash-db
-keptn onboard service unleash --project=unleash --chart=./unleash
-```
+    ```console
+    keptn onboard service unleash-db --project=unleash --chart=./unleash-db
+    keptn onboard service unleash --project=unleash --chart=./unleash
+    ```
 
-Send new artifacts for unleash and unleash-db using the keptn send new-artifact command:
+1. Send new artifacts for unleash and unleash-db using the keptn send new-artifact command:
 
-```console
-keptn send event new-artifact --project=unleash --service=unleash-db --image=postgres:10.4
-keptn send event new-artifact --project=unleash --service=unleash --image=docker.io/keptnexamples/unleash:1.0.0
-```
+    ```console
+    keptn send event new-artifact --project=unleash --service=unleash-db --image=postgres:10.4
+    keptn send event new-artifact --project=unleash --service=unleash --image=docker.io/keptnexamples/unleash:1.0.0
+    ```
 
-Get the url (unleash.unelash-dev.KEPTN_DOMAIN):
+Get the url (unleash.unleash-production.KEPTN_DOMAIN):
 ```console
 echo http://unleash.unleash-production.$(kubectl get cm keptn-domain -n keptn -o=jsonpath='{.data.app_domain}')
 ```
@@ -205,7 +220,16 @@ username: keptn
 password: keptn
 ```
 
+# Configure Unleash server
 
+Feature flag for a promotional campaign that can be enabled whenever you want to run a promotional campaign on top of your shopping cart
+
+To set up the feature flag, go to your Unleash server and login with the credentials from the previous step.
+
+1. Click on the red `+` to add a new feature flag.
+    ![add feature flag](./images/unleash-add.png)
+1. Name the feature toggle **EnablePromotion** and add **carts** in the description field.
+    ![promotion feature flag](./images/unleash-promotion.png)
 
 ## Configure Keptn
 
