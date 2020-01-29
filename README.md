@@ -38,6 +38,16 @@ Please find the login information at your place or ask the instructor. Open a we
     XXXXX
     ```
 
+1. Clean up previously installed OneAgent Operator.
+
+
+    Since in the previous class we already deployed the Dynatrace OneAgent Operator into our cluster, we first remove it to make sure to have a fresh start.
+
+    ```console
+    kubectl delete namespace dynatrace
+    ```
+
+
 # Install Keptn ⚙️
 
 ## 1) Install Keptn
@@ -51,8 +61,7 @@ keptn install --platform=kubernetes
 Provide the cluster name, region, and project.
 
 
-
-Please note that the Keptn install command does offer other platforms as well. A list of all supported platforms can be retrieved by executing `keptn install --help` .
+Please note that the Keptn install command does offer support for other platforms as well. A list of all supported platforms can be retrieved by executing `keptn install --help` .
 
 The installation will take about **5 minutes** to perform.
 
@@ -138,6 +147,13 @@ We recommend creating a temporary file and copying the following lines into an e
 
 ## 3) Install Dynatrace
 
+1. Verify that the OneAgent Operator is not installed yet.
+
+    ```console
+    kubectl get namespaces
+    ````
+    Should give you a list **without** a `dynatrace` namespace. If you still can see the `dynatrace` namespace at this point, please go ahead and remove it: `kubectl delete namespace dynatrace`
+
 1. Create a secret for in your cluster with the Dynatrace credentials
 
     ```console
@@ -150,23 +166,33 @@ We recommend creating a temporary file and copying the following lines into an e
     kubectl apply -f https://raw.githubusercontent.com/keptn-contrib/dynatrace-service/0.6.0/deploy/manifests/dynatrace-service/dynatrace-service.yaml
     ```
 
-1. Once the Dynatrace service is instaled, configure Dyntrace with Keptn:
+1. Once the Dynatrace service is installed, configure Dyntrace with Keptn:
 
     ```console
     keptn configure monitoring dynatrace
     ```
 
-## 4) Expose Keptn's Bridge - OPTIONAL
+## 4) Upgrade & Expose Keptn's Bridge
 
 The [Keptn’s bridge](https://keptn.sh/docs/0.6.0/reference/keptnsbridge/) provides an easy way to browse all events that are sent within Keptn and to filter on a specific Keptn context. When you access the Keptn’s bridge, all Keptn entry points will be listed in the left column. Please note that this list only represents the start of a deployment of a new artifact. Thus, more information on the executed steps can be revealed when you click on one event.
 
-In the default installation of Keptn, the bridge is only accessible via `kubectl port-forward`. To make things easier for workshop participants, we will expose it by creating a public URL for this component.
+In the default installation of Keptn, the bridge is only accessible via `kubectl port-forward`. To make things easier in this workshop, we will expose it by creating a public URL for this component.
 
 TODO: check if this still correct script!
 
+1. First we update to the latest (still top secret version) of the Keptn's bridge by replacing the previous deployment:
+
+    ```console
+    cd bridge/update
+    ```
+
+    ```console
+    kubectl apply -f newbridge.yaml
+    ```
+
 1. Navigate to the folder to expose the bridge.
     ```console
-    cd /usr/keptn/scripts/expose-bridge
+    cd bridge/expose-bridge
     ```
 
 1. Execute the following script.
@@ -176,9 +202,64 @@ TODO: check if this still correct script!
 
 1. It will give you the URL of your Bridge at the end of the script. Open a browser and verify the bridge is running.
 
+TODO UPDATE IMAGE
     <img src="images/bridge-empty.png" width="500"/>
 
+# Create project and onboard application
 
+1. Make sure you are in the correct folder of your examples directory:
+
+    ```console
+    cd examples/onboarding-carts
+    ```
+
+1. Create a project
+
+    ```console
+    keptn create project sockshop --shipyard=./shipyard.yaml
+    ```
+
+1. Onboard carts service
+
+    ```console
+    keptn onboard service carts --project=sockshop --chart=./carts
+    ```
+
+1. Onboard the database needed for the carts service
+
+    ```console
+    keptn onboard service carts-db --project=sockshop --chart=./carts-db --deployment-strategy=direct
+    ```
+
+1. Deploy the carts database
+
+    ```console
+    keptn send event new-artifact --project=sockshop --service=carts-db --image=mongo:4.2.2
+    ```
+
+1. Deploy the carts service by specifying the built artifact, which is stored on DockerHub and tagged with version 0.10.1:
+
+    ```console
+    keptn send event new-artifact --project=sockshop --service=carts --image=docker.io/keptnexamples/carts --tag=0.10.1
+    ```
+
+1. Go to Keptn's bridge and check which events have already been generated. You can access it by getting the URL with this command:
+
+    ```console
+    echo http://bridge.keptn.$(kubectl get cm keptn-domain -n keptn -o=jsonpath='{.data.app_domain}')
+    ```
+
+1. Take a look at the service that has been deployed, by getting the URL with this command:
+
+    * Hardening environment
+        ```console
+        echo http://carts.sockshop-hardening.$(kubectl get cm keptn-domain -n keptn -o=jsonpath='{.data.app_domain}')
+        ```
+
+    * Production environment
+        ```console
+        echo http://carts.sockshop-production.$(kubectl get cm keptn-domain -n keptn -o=jsonpath='{.data.app_domain}')
+        ```
 
 # Create Unleash server
 
