@@ -94,7 +94,7 @@ func doRequests(url string, b []byte, c *http.Client) {
 			continue
 		}
 
-		if resp.StatusCode == 201 {
+		if resp.StatusCode == 201 || resp.StatusCode == 500 {
 			var result map[string]interface{}
 			json.NewDecoder(resp.Body).Decode(&result)
 			log.Println(result)
