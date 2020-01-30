@@ -175,7 +175,7 @@ We recommend creating a temporary file and copying the following lines into an e
     keptn configure monitoring dynatrace
     ```
 
-## 4) Upgrade & Expose Keptn's Bridge
+## 4) Upgrade & Expose Keptn's Bridge ⛵
 
 The [Keptn’s bridge](https://keptn.sh/docs/0.6.0/reference/keptnsbridge/) provides an easy way to browse all events that are sent within Keptn and to filter on a specific Keptn context. When you access the Keptn’s bridge, all Keptn entry points will be listed in the left column. Please note that this list only represents the start of a deployment of a new artifact. Thus, more information on the executed steps can be revealed when you click on one event.
 
@@ -264,7 +264,7 @@ TODO UPDATE IMAGE
         echo http://carts.sockshop-production.$(kubectl get cm keptn-domain -n keptn -o=jsonpath='{.data.app_domain}')
         ```
 
-# Create Unleash server
+# Create Unleash server 🔀
 
 To quickly get an Unleash server up and running with Keptn, follow these instructions:
 
@@ -304,7 +304,7 @@ username: keptn
 password: keptn
 ```
 
-# Configure Unleash server
+## Configure Unleash server 🛠️
 
 Feature flag for a promotional campaign that can be enabled whenever you want to run a promotional campaign on top of your shopping cart
 
@@ -315,7 +315,7 @@ To set up the feature flag, go to your Unleash server and login with the credent
 1. Name the feature toggle **EnablePromotion** and add **carts** in the description field.
     ![promotion feature flag](./images/unleash-promotion.png)
 
-## Configure Keptn
+# Configure Keptn ⛵
 
 Now everything is set up in the Unleash server. For Keptn to be able to connect to the Unleash server, we have to add a secret with the Unleash API URL as well as the Unleash tokens.
 
