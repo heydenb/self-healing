@@ -25,7 +25,7 @@ Please find the login information at your place or ask the instructor. Open a we
 1. Start the Docker container that contains all scripts we need in this workshop setting.
 
     ```console
-    docker run -d -t --rm --name hotday-gke jetzlstorfer/hotday-gke:0.6.0 && docker exec -it hotday-gke /bin/sh -c "[ -e /bin/bash ] && /bin/bash || /bin/sh"
+    docker run -d --name ${USER} -it --mount type=bind,source=/home/${USER}/.kube/,target=/root/.kube/ jetzlstorfer/hotday-gke:0.6.0 && docker exec -it ${USER} /bin/bash
     ```
 
 
@@ -181,8 +181,6 @@ The [Keptn’s bridge](https://keptn.sh/docs/0.6.0/reference/keptnsbridge/) prov
 
 In the default installation of Keptn, the bridge is only accessible via `kubectl port-forward`. To make things easier in this workshop, we will expose it by creating a public URL for this component.
 
-TODO: check if this still correct script!
-
 1. First we update to the latest (still top secret version) of the Keptn's bridge by replacing the previous deployment:
 
     ```console
@@ -205,7 +203,6 @@ TODO: check if this still correct script!
 
 1. It will give you the URL of your Bridge at the end of the script. Open a browser and verify the bridge is running.
 
-TODO UPDATE IMAGE
     <img src="images/bridge-empty.png" width="500"/>
 
 # Create project and onboard application
