@@ -187,7 +187,7 @@ TODO: check if this still correct script!
     ```
 
     ```console
-    kubectl apply -f newbridge.yaml
+    kubectl apply -f bridge-deployment.yaml
     ```
 
 1. Navigate to the folder to expose the bridge.
