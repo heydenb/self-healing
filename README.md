@@ -352,7 +352,7 @@ keptn add-resource --project=sockshop --service=carts --stage=production --resou
 Now that everything is set up, next we are going to hit the application with some load and toggle the feature flag.
 
 
-# Try the Self-Healing 👩‍💻👨‍💻
+# Try the Self-Healing ⛑️
 
 1. Move to the folder with some load generation scripts
 
