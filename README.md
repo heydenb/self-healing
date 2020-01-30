@@ -20,6 +20,15 @@ There is no need to install anything on your local machine, instead we are going
 
 Please find the login information at your place or ask the instructor. Open a web browser and login to the bastion host with the provided credentials.
 
+1. Open a browser and login to the Bastion host via ShellInABox. You will find the  URL on your handout cards.
+
+1. Start the Docker container that contains all scripts we need in this workshop setting.
+
+    ```console
+    docker run -d -t --rm --name hotday-gke jetzlstorfer/hotday-gke:0.6.0 && docker exec -it hotday-gke /bin/sh -c "[ -e /bin/bash ] && /bin/bash || /bin/sh"
+    ```
+
+
 1. Verify your Kubernetes configuration
 
     ```console
@@ -31,11 +40,12 @@ Please find the login information at your place or ask the instructor. Open a we
     ```
 2. Verify that all files are available
     ```console
-    ls -la
+    cd examples
+    ls
     ```
     Should give you:
     ```
-    XXXXX
+    bridge  load-generation  onboarding-carts  unleash-server
     ```
 
 1. Clean up previously installed OneAgent Operator.
@@ -58,8 +68,7 @@ Install the Keptn control plane components into your cluster, using the **Keptn 
 keptn install --platform=kubernetes
 ```
 
-Provide the cluster name, region, and project.
-
+It will prompt again for confirmation, if everything is fine, go ahead and install Keptn.
 
 Please note that the Keptn install command does offer support for other platforms as well. A list of all supported platforms can be retrieved by executing `keptn install --help` .
 
@@ -75,36 +84,30 @@ Once the installation is finished you should find a couple of pods running in yo
 $ kubectl get pods -n keptn
 
 NAME                                                              READY   STATUS    RESTARTS   AGE
-api-79b8ccfd76-qj72x                                              1/1     Running   0          2m1s
-bridge-77f6c87848-6pmfz                                           1/1     Running   0          2m1s
-configuration-service-6d685d77c6-tnznz                            1/1     Running   0          2m
-eventbroker-go-6ffd7c645f-pcx79                                   1/1     Running   0          2m1s
-gatekeeper-service-evaluation-done-distributor-59b5c67c4f-5m48g   1/1     Running   0          65s
-gatekeeper-service-fb78959f7-9nxbh                                1/1     Running   0          65s
-helm-service-56f67c66ff-l2jjp                                     1/1     Running   0          2m1s
-helm-service-configuration-change-distributor-7956d55f6-vzfl9     1/1     Running   0          65s
-helm-service-service-create-distributor-56dd7867cd-d7vb5          1/1     Running   0          2m
-jmeter-service-7b5d4dbd4d-pntfn                                   1/1     Running   0          64s
-jmeter-service-deployment-distributor-68449547dd-5kqnf            1/1     Running   0          64s
-keptn-nats-cluster-1                                              1/1     Running   0          2m9s
-lighthouse-service-7bb5bb6d66-8hfmq                               1/1     Running   0          64s
-lighthouse-service-get-sli-done-distributor-6f7cd96bfd-94fbj      1/1     Running   0          64s
-lighthouse-service-start-evaluation-distributor-7d7d96f8cfl667x   1/1     Running   0          64s
-lighthouse-service-tests-finished-distributor-6bdc9bbf75-p76k8    1/1     Running   0          64s
-nats-operator-7dcd546854-f2xvk                                    1/1     Running   0          2m32s
-prometheus-service-68dc779f66-g69sw                               1/1     Running   0          36s
-prometheus-service-monitoring-configure-distributor-64cd5fw7qvp   1/1     Running   0          19s
-prometheus-sli-service-5f56447476-pzn4q                           1/1     Running   0          36s
-prometheus-sli-service-monitoring-configure-distributor-7cqcv9t   1/1     Running   0          19s
-remediation-service-8f545fb8b-pqgwx                               1/1     Running   0          63s
-remediation-service-problem-distributor-545977746-zj22z           1/1     Running   0          63s
-servicenow-service-7cd9b8784-4kwmq                                1/1     Running   0          36s
-servicenow-service-problem-distributor-699b6c87c9-qn5kv           1/1     Running   0          19s
-shipyard-service-649b9ccfdb-jmrmz                                 1/1     Running   0          2m
-shipyard-service-create-project-distributor-5654656f66-6fl82      1/1     Running   0          2m
-shipyard-service-delete-project-distributor-b4b947b95-cd29h       1/1     Running   0          2m
-wait-service-868f65cd8-nm4j4                                      1/1     Running   0          63s
-wait-service-deployment-distributor-864779d56b-dx4lk              1/1     Running   0          63s
+api-54699455d6-gk9pn                                              1/1     Running   0          117s                            
+bridge-8ccf45786-dknf5                                            1/1     Running   0          117s                            
+configuration-service-84b9b59c98-54kf8                            1/1     Running   0          115s                            
+eventbroker-go-64648bcf49-9gtcd                                   1/1     Running   0          117s                            
+gatekeeper-service-5779d4948c-d8gm2                               1/1     Running   0          60s                             
+gatekeeper-service-evaluation-done-distributor-6cdbcc8c75-mlvxd   1/1     Running   0          60s                             
+helm-service-7cdd9bf76f-nwf27                                     1/1     Running   0          116s                            
+helm-service-configuration-change-distributor-85fb46f6d6-822rz    1/1     Running   0          60s                             
+helm-service-service-create-distributor-7cd475dc5b-5ffn6          1/1     Running   0          116s                            
+jmeter-service-54db444865-gs6x5                                   1/1     Running   0          60s                             
+jmeter-service-deployment-distributor-7dcd54dd58-qtwsp            1/1     Running   0          59s                             
+keptn-nats-cluster-1                                              1/1     Running   0          2m5s                            
+lighthouse-service-6d99dcbc4d-6p89d                               1/1     Running   0          59s                             
+lighthouse-service-get-sli-done-distributor-665df8b596-ps8kv      1/1     Running   0          59s                             
+lighthouse-service-start-evaluation-distributor-78874b45f7jj7x4   1/1     Running   0          59s                             
+lighthouse-service-tests-finished-distributor-5f574b4897-ttckb    1/1     Running   0          59s                             
+nats-operator-7dcd546854-sw85h                                    1/1     Running   0          2m32s                           
+remediation-service-79c9f76c88-srcjb                              1/1     Running   0          58s                             
+remediation-service-problem-distributor-6b69d584c6-qh7z2          1/1     Running   0          58s                             
+shipyard-service-79ff45984-mkhrm                                  1/1     Running   0          116s                            
+shipyard-service-create-project-distributor-7b5b9bcfc6-ltw2q      1/1     Running   0          116s                            
+shipyard-service-delete-project-distributor-789b6d54d9-c8nhk      1/1     Running   0          116s                            
+wait-service-dd6956bdb-7hfr6                                      1/1     Running   0          59s                             
+wait-service-deployment-distributor-849c546d7b-wdhvv              1/1     Running   0          58s  
 ```
 
 </details>
@@ -192,7 +195,7 @@ TODO: check if this still correct script!
 
 1. Navigate to the folder to expose the bridge.
     ```console
-    cd bridge/expose-bridge
+    cd ../expose-bridge
     ```
 
 1. Execute the following script.
@@ -210,7 +213,7 @@ TODO UPDATE IMAGE
 1. Make sure you are in the correct folder of your examples directory:
 
     ```console
-    cd examples/onboarding-carts
+    cd ../../onboarding-carts
     ```
 
 1. Create a project
@@ -268,7 +271,7 @@ To quickly get an Unleash server up and running with Keptn, follow these instruc
 1. Make sure you are in the correct folder of your examples directory:
 
     ```console
-    cd examples/unleash-server
+    cd ../unleash-server
     ```
 
 1. Create a new project
@@ -338,6 +341,10 @@ Finally, switch to the carts example (cd examples/onboarding-carts) and add the 
 using the command:
 
 ```console
+cd ../onboarding-carts
+```
+
+```console
 keptn add-resource --project=sockshop --service=carts --stage=production --resource=remediation.yaml --resourceUri=remediation.yaml
 ```
 
@@ -350,7 +357,7 @@ Now that everything is set up, next we are going to hit the application with som
 1. Move to the folder with some load generation scripts
 
     ```console
-    cd load-generation/bin
+    cd ../load-generation/bin
     ```
 
 1. Start the load generator
@@ -366,7 +373,18 @@ Now that everything is set up, next we are going to hit the application with som
 
 1. By enabling this feature flag, a not implemented function is called resulting in a NotImplementedFunction error in the source code and a failed response. After a couple of minutes, the monitoring tool will detect an increase in the failure rate and will send out a problem notification to Keptn.
 
-6. Keptn will receive the problem notification/alert and look for a remediation action that matches this problem. Since we have added the remediation.yaml before, Keptn will find a remediation action and will trigger the corresponding action that will disable the feature flag.
+1. Change Dynatrace default settings: In this workshop we are not having a lot of traffic on our service so we want to change the default settings in Dynatrace to enable a quicker problem notification.
+
+    - In your Dynatrace tenant, click on **Dashboards** in the left menu and select the **Sockshop@keptn** dashboard.
+    ![dashboard](./images/dashboard.png)
+    - In the dashboard, now click on the **services: production** tile in the **production** section.
+    - This will lead you to the Services & Transactions overview, but already filtered to our production environment only. Click on the **ItemsController**.
+    ![services](./images/services.png)
+    - On this screen for the service, we are going to adjust the anomaly detection settings. Click on the **...** icon and then **Edit** to adjust the settings as follows.
+    ![anomaly-detection](./images/anomaly-detection-service.png)
+    ![anomaly-detection](./images/anomaly-detection-settings.png)
+
+1. Keptn will receive the problem notification/alert and look for a remediation action that matches this problem. Since we have added the remediation.yaml before, Keptn will find a remediation action and will trigger the corresponding action that will disable the feature flag.
 
 
 # Keptn Community 📢
