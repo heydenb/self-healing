@@ -411,3 +411,19 @@ Further information about Keptn you can find on the [keptn.sh](keptn.sh) website
 Join our Slack channel!
 
 The easiest way to get in contact with Keptn users and creaters is to [join our Slack channel](https://join.slack.com/t/keptn/shared_invite/enQtNTUxMTQ1MzgzMzUxLTcxMzE0OWU1YzU5YjY3NjFhYTJlZTNjOTZjY2EwYzQyYWRkZThhY2I3ZDMzN2MzOThkZjIzOTdhOGViMDNiMzI) - we are happy to meet you there!
+
+# Troubleshooting / Useful commands
+
+- If you drop out of your Docker container, you can connect to it again via this command:
+
+    ```console
+    docker exec -it ${USER} /bin/bash
+    ```
+
+- If you want to check if there are pods running in your environments you can execute this:
+
+    ```console
+    kubectl get pods -n sockshop-hardening
+    kubectl get pods -n sockshop-production
+    ```
+
