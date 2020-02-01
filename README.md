@@ -183,19 +183,19 @@ The [Keptn’s bridge](https://keptn.sh/docs/0.6.0/reference/keptnsbridge/) prov
 
 In the default installation of Keptn, the bridge is only accessible via `kubectl port-forward`. To make things easier in this workshop, we will expose it by creating a public URL for this component.
 
-1. First we update to the latest (still top secret version) of the Keptn's bridge by replacing the previous deployment:
+1. First we update to the latest (early access!) of the Keptn's bridge by replacing the previous deployment:
 
     ```console
-    cd bridge/update
+    kubectl -n keptn set image deployment/bridge bridge=keptn/bridge2:0.6.1.EAP.20200131.1010 --record
     ```
 
     ```console
-    kubectl apply -f bridge-deployment.yaml
+    kubectl -n keptn-datastore set image deployment/mongodb-datastore mongodb-datastore=keptn/mongodb-datastore:0.6.1.EAP.20200131.1010 --record
     ```
 
 1. Navigate to the folder to expose the bridge.
     ```console
-    cd ../expose-bridge
+    cd bridge/expose-bridge
     ```
 
 1. Execute the following script.
@@ -283,6 +283,8 @@ To quickly get an Unleash server up and running with Keptn, follow these instruc
 
     ```console
     keptn onboard service unleash-db --project=unleash --chart=./unleash-db
+    ```
+    ```console
     keptn onboard service unleash --project=unleash --chart=./unleash
     ```
 
@@ -290,6 +292,8 @@ To quickly get an Unleash server up and running with Keptn, follow these instruc
 
     ```console
     keptn send event new-artifact --project=unleash --service=unleash-db --image=postgres:10.4
+    ```
+    ```console
     keptn send event new-artifact --project=unleash --service=unleash --image=docker.io/keptnexamples/unleash:1.0.0
     ```
 
@@ -313,6 +317,11 @@ To set up the feature flag, go to your Unleash server and login with the credent
     ![add feature flag](./images/unleash-add.png)
 1. Name the feature toggle **EnablePromotion** and add **carts** in the description field.
     ![promotion feature flag](./images/unleash-promotion.png)
+
+    ```console
+    EnablePromotion
+    carts
+    ```
 
 # Configure Keptn ⛵
 
@@ -350,8 +359,7 @@ keptn add-resource --project=sockshop --service=carts --stage=production --resou
 
 Now that everything is set up, next we are going to hit the application with some load and toggle the feature flag.
 
-
-# Try the Self-Healing ⛑️
+# Start load generation
 
 1. Move to the folder with some load generation scripts
 
@@ -365,12 +373,7 @@ Now that everything is set up, next we are going to hit the application with som
     ./loadgenerator-linux "http://carts.sockshop-production.$(kubectl get cm keptn-domain -n keptn -o=jsonpath='{.data.app_domain}')" 
     ```
 
-1. Now, go back to your Unleash server in your browser. In this tutorial, we are going to turn on the promotional campaign, which purpose is to add promotional gifts to about 30 % of the user interactions that put items in their shopping cart.
-
-1. Click on the toggle next to EnablePromotion to enable this feature flag.
-    ![enable promotion](./images/unleash-promotion-toggle-on.png)
-
-1. By enabling this feature flag, a not implemented function is called resulting in a NotImplementedFunction error in the source code and a failed response. After a couple of minutes, the monitoring tool will detect an increase in the failure rate and will send out a problem notification to Keptn.
+# Configure Dynatrace
 
 1. Change Dynatrace default settings: In this workshop we are not having a lot of traffic on our service so we want to change the default settings in Dynatrace to enable a quicker problem notification.
 
@@ -382,6 +385,17 @@ Now that everything is set up, next we are going to hit the application with som
     - On this screen for the service, we are going to adjust the anomaly detection settings. Click on the **...** icon and then **Edit** to adjust the settings as follows.
     ![anomaly-detection](./images/anomaly-detection-service.png)
     ![anomaly-detection](./images/anomaly-detection-settings.png)
+
+# Try the Self-Healing ⛑️
+
+1. Now, go back to your Unleash server in your browser. In this tutorial, we are going to turn on the promotional campaign, which purpose is to add promotional gifts to about 30 % of the user interactions that put items in their shopping cart.
+
+1. Click on the toggle next to EnablePromotion to enable this feature flag.
+    ![enable promotion](./images/unleash-promotion-toggle-on.png)
+
+1. By enabling this feature flag, a not implemented function is called resulting in a NotImplementedFunction error in the source code and a failed response. After a couple of minutes, the monitoring tool will detect an increase in the failure rate and will send out a problem notification to Keptn.
+
+
 
 1. Keptn will receive the problem notification/alert and look for a remediation action that matches this problem. Since we have added the remediation.yaml before, Keptn will find a remediation action and will trigger the corresponding action that will disable the feature flag.
 
