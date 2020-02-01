@@ -1,3 +1,5 @@
+![perform](./images/perform_logo.png)
+
 # Keptn Self-Healing Workshop Instructions
 
 # Overview
@@ -201,7 +203,7 @@ In the default installation of Keptn, the bridge is only accessible via `kubectl
     ./exposeBridge.sh
     ```
 
-1. It will give you the URL of your Bridge at the end of the script. Open a browser and verify the bridge is running.
+1. It will give you the URL of your Bridge at the end of the script. Open a browser and verify the bridge is running. Please note that on the latest version of Mac OS you might not be able to access it. Please 
 
     <img src="images/bridge-empty.png" width="500"/>
 
