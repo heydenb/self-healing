@@ -30,15 +30,19 @@ Please find the login information at your place or ask the instructor. Open a we
     docker run -d --name ${USER} -it --mount type=bind,source=/home/${USER}/.kube/,target=/root/.kube/ jetzlstorfer/hotday-gke:0.6.0 && docker exec -it ${USER} /bin/bash
     ```
 
+    **Note**: If you have already started the Docker container, but lost conenction and want to connect to it again, pleae use:
+    ```console
+    docker exec -it ${USER} /bin/bash
+    ```
 
 1. Verify your Kubernetes configuration
 
     ```console
     kubectl config current-context
     ```
-    Should give you something like
+    Should give you something like (numbers at the end will vary)
     ```
-    XXXXXXXXX
+    sealfhealing01
     ```
 2. Verify that all files are available
     ```console
@@ -318,7 +322,7 @@ To set up the feature flag, go to your Unleash server and login with the credent
 1. Name the feature toggle **EnablePromotion** and add **carts** in the description field.
     ![promotion feature flag](./images/unleash-promotion.png)
 
-    ```console
+    ```
     EnablePromotion
     carts
     ```
