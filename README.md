@@ -120,7 +120,9 @@ wait-service-deployment-distributor-849c546d7b-wdhvv              1/1     Runnin
 
 ## 2) Collect tokens for Dynatrace
 
+<!--
 1. Make sure you have followed the prerequisites and have a Dynatrace tenant ready. If not, please sign up for a [free Dynatrace trial](https://www.dynatrace.com/trial). There is no need to install anything on your local machine. For now, just make sure you have created your tenant.
+-->
 
 1. To be able to connect a Dynatrace tenant to the cluster, we will need an API as well as an Platform as a Service (PaaS) token from the Dynatrace tenant.
 We recommend creating a temporary file and copying the following lines into an editor, fill them out and keep them as a reference for later:
@@ -161,12 +163,18 @@ We recommend creating a temporary file and copying the following lines into an e
     ```console
     kubectl get namespaces
     ````
-    Should give you a list **without** a `dynatrace` namespace. If you still can see the `dynatrace` namespace at this point, please go ahead and remove it: `kubectl delete namespace dynatrace`
+    Should give you a list **without** a `dynatrace` namespace. If you still can see the `dynatrace` namespace at this point, please go ahead and remove it by executing: `kubectl delete namespace dynatrace`
 
 1. Create a secret for in your cluster with the Dynatrace credentials
 
     ```console
-    kubectl -n keptn create secret generic dynatrace --from-literal="DT_API_TOKEN=<DT_API_TOKEN>" --from-literal="DT_TENANT=<DT_TENANT>" --from-literal="DT_PAAS_TOKEN=<DT_PAAS_TOKEN>"
+    DT_TENANT=yourtenant.dynatracelabs.com
+    DT_API_TOKEN=yourapitoken
+    DT_PAAS_TOKEN=yourpaastoken
+    ```
+
+    ```console
+    kubectl -n keptn create secret generic dynatrace --from-literal="DT_API_TOKEN=$DT_API_TOKEN" --from-literal="DT_TENANT=$DT_TENANT" --from-literal="DT_PAAS_TOKEN=$DT_PAAS_TOKEN"
     ```
 
 1. Install the Dyntrace service:
