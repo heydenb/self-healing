@@ -15,10 +15,11 @@ There is no need to install any software on your local machine, instead we will 
 
 ## Reset environment
 
-    We are going to reset our environment for this part and start over with fresh installation.
-    ```console
-    kubectl delete namespace dynatrace tower production
-    ```
+We are going to reset our environment for this part and start over with fresh installation.
+
+```console
+kubectl delete namespace dynatrace tower production
+```
 
 ## 2. Tools 🛠️
 
