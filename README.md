@@ -30,7 +30,7 @@ Please find the login information at your place or ask the instructor. Open a we
     docker run -d --name ${USER} -it --mount type=bind,source=/home/${USER}/.kube/,target=/root/.kube/ jetzlstorfer/hotday-gke:0.6.0 && docker exec -it ${USER} /bin/bash
     ```
 
-    **Note**: If you have already started the Docker container, but lost conenction and want to connect to it again, pleae use:
+    **Note**: If you have already started the Docker container, but lost connection and want to connect to it again, pleae use:
     ```console
     docker exec -it ${USER} /bin/bash
     ```
