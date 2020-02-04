@@ -13,6 +13,12 @@ There is no need to install any software on your local machine, instead we will 
 * **Dynatrace** - We will use Dynatrace to monitor our cluster as well as all our sample application. You will find the login information on the handout on your place. 
 * **Kubernetes Cluster** - A Kubernetes Cluster is provided for you to deploy and run the sample application on. 
 
+## Reset environment
+
+    We are going to reset our environment for this part and start over with fresh installation.
+    ```console
+    kubectl delete namespace dynatrace tower production
+    ```
 
 ## 2. Tools 🛠️
 
